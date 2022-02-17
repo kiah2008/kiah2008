@@ -17,12 +17,11 @@ Thank you for your support!
     * Android Virtual Device  
          - [x] Android Audio &Video
 - 👯 I’m looking to collaborate on audio and image algorithms
-    
+
 ![kiah2008's github stats](https://github-readme-stats.vercel.app/api?username=kiah2008&show_icons=true&hide_border=true)
 
 <!--
 **kiah2008/kiah2008** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
-
 Here are some ideas to get you started:
 
 - 🔭 I’m currently working on ...
@@ -36,7 +35,7 @@ Here are some ideas to get you started:
 -->
 
 # 2022 TODO
-|  State   | Destcription  | Reference|
-|  ----  | ----  | ---- |
-|[x] |  | |
-| [x] |   | |
+- [ ] 静音检测算法：https://github.com/cpuimage/WebRTC_VAD
+- [ ] 自动增益算法：https://github.com/cpuimage/WebRTC_AGC
+
+

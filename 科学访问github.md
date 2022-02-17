@@ -45,12 +45,13 @@ ping "%%a"
 显然第一种方案更加方便。因为 DNS 服务器储存的映射关系是动态更新的，无法直接控制。直接修改本机 Hosts 文件，锁定域名对应的 IP，更加有效方便。当然，Hosts 文件的作用就是绑定域名与 IP 的映射关系。
 
 # 5. Windows 修改 Hosts 文件
-打开 cmd，使用 vim 修改 Hosts 文件：
-sudo vim C:\Windows\System32\drivers\etc\hosts
-操作 vim 可以简单百度一下。添加 Github 相关域名的绑定，修改如上图所示，具体值见最后。
+打开 cmd，使用note++修改 Hosts 文件：
+管理员权限编辑
+C:\Windows\System32\drivers\etc\hosts
+添加 Github 相关域名的绑定，修改如下面所示。
 刷新网络 DNS 缓存：
-ipconfig /flushdns
-Windows 不自带sudo与vim，可以通过 Scoop 安装：scoop install sudo vim。
+
+> ipconfig /flushdns
 
 # 6 目前可用IP
 列出当前使用的 Github 相关域名比较合适的 IP 值，笔者会定期维护更新。其中的设置可以解决github.com头像无法显示的问题：

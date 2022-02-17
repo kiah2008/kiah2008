@@ -23,7 +23,16 @@
 
 # 3. 使用本地ping工具,对IP地址进行ping测试
 ![image](https://user-images.githubusercontent.com/4476837/154514159-1a96d5ab-1f39-42b2-9e79-69c60439d151.png)
+
 选择最合适的IP地址
+```bat
+@echo off
+for /f "tokens=1,2 delims='" %%a in (test_ip.txt) do (
+echo ping ip %%a
+ping "%%a"
+)
+```
+
 
 # 4. 修改hosts,然后进行验证
 

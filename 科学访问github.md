@@ -53,7 +53,26 @@ C:\Windows\System32\drivers\etc\hosts
 
 > ipconfig /flushdns
 
-# 6 目前可用IP
+# 6. 汇总可用的ping工具
+|  名称   | 网址  |  说明 |
+|  ----  | ----  | ---- |
+| IPIPNET | https://tools.ipip.net/newping.php|支持全国Ping测速，同时IP库精准度高，另有路由追踪等测试 | 
+| 站长工具 | http://ping.chinaz.com|支持全国Ping测速，IP库不准，还有很多其他小功能（比如备案查询等） | 有比较方便的解析IP一览 |
+| PingPE | http://ping.pe| | 国内外服务器都有，英文界面，可以持续监测丢包，还能监测端口开放但是国内节点较少且特殊 | 
+| BOCE | https://www.boce.com | 比较好用的网站测速网站，可以指定解析IP，也有IP分布数据百分比 | 
+| CE8 | https://www.ce8.com | 支持网站测速对比，大体功能和BOCE差不多，但是功能少点 | 
+| 17CE | https://www.17ce.com/ |可能是最常用的压测网站，测速速度慢，但是结果好像比较准确 |
+| CheckHost| https://check-host.net/check-http | 国外的测速网站，只有海外测速，支持TCP/UDP端口测试，常用于测有没有被打死 |
+| PageSpeedInsights | https://developers.google.com/speed/pagespeed/insights | 谷歌的测速网站，个人感觉不怎么准，支持移动和桌面分开测速 |
+| 性能魔方 | http://www.mmtrix.com/evaluate/applist | 只有国内节点，经常报错，但是有详细的测速报告 |
+| Gtmetrix | https://gtmetrix.com | 国外的测速网站，节点少，但是报告也挺详细 |
+| CHAICP | http://chaicp.com/#first | 最好用的备案查询网站，可以检测主流备案商家（可惜没有华为云）|
+| 友盟 | https://www.umeng.com | 常用的站长统计工具之一 |
+| 百度统计 | https://tongji.baidu.com | 常用的站长统计工具之一 |
+| 谷歌分析 | https://analytics.google.com | 常用的站长统计工具之一 |
+| 爱站 | https://www.aizhan.com | 各种站长常用信息查询比如收录等 |
+
+# 7. 目前可用IP
 列出当前使用的 Github 相关域名比较合适的 IP 值，笔者会定期维护更新。其中的设置可以解决github.com头像无法显示的问题：
 
 ```
@@ -97,3 +116,4 @@ C:\Windows\System32\drivers\etc\hosts
 185.199.108.133 avatars8.githubusercontent.com
 # End of the section
 ```
+

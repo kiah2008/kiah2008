@@ -9,13 +9,16 @@ take for example.
 Users\name\AppData\Local\CMakeTools\cmake-tools-kits.json
 
 ```
-{
- "name": "Android clang",
- "compilers": {
-   "C": "/opt/android-sdk/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/clang",
-   "CXX": "/opt/android-sdk/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++"
- }
-}
+  {
+    "name": "Android Clang",
+    "compilers": {
+      "C": "/path/to/ndk/21.4.7075529/toolchains/llvm/prebuilt/windows-x86_64/bin/clang.exe",
+      "CXX": "/path/to/ndk/21.4.7075529/toolchains/llvm/prebuilt/windows-x86_64/bin/clang++.exe"
+    },
+    "environmentVariables": {
+      "ANDROID_NDK": "/path/to/ndk/21.4.7075529/"
+    }
+  },
 ```
 
 to the file (~/.local/share/CMakeTools/cmake-tools-kits.json on Linux).
@@ -43,27 +46,19 @@ In the setting directory create a local setting file **settings.json** eg vscode
 
 The **ANDROID_HOST_TAG** tag should be **windows-x86_64 for Windows** (speaking under correction).
 
-In the same setting directory create a c_cpp_properties.json file:
+windows part:
 ```
 {
- "configurations": [
-     {
-         "name": "Android",
-         "includePath": [
-             "${workspaceFolder}/**",
-             "/media/opt/android-sdk/ndk-bundle/sysroot/usr/include",
-             "/media/opt/android-sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include"
-         ],
-         "defines": [],
-         "compilerPath": "/opt/android-sdk/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android28-clang",
-         "cStandard": "c11",
-         "cppStandard": "c++14",
-         "intelliSenseMode": "clang-x64",
-         "configurationProvider": "vector-of-bool.cmake-tools",
-         "compileCommands": "${workspaceFolder}/build/compile_commands.json"
-     }
- ],
- "version": 4
+    "cmake.configureArgs":[
+        "-DCMAKE_TOOLCHAIN_FILE=${env:ANDROID_NDK}/build/cmake/android.toolchain.cmake",
+        "-DCMAKE_ANDROID_ARCH_ABI=arm64-v8a",
+        "-DANDROID_ABI=arm64-v8a",
+        "-DCMAKE_SYSTEM_VERSION=28",
+        "-DANDROID_PLATFORM=android-28",
+        "-DCMAKE_BUILD_TYPE=debug",
+        "-DANDROID_NDK=D:/Users/80348467/AppData/Local/Android/Sdk/ndk/21.4.7075529",
+    ],
+     "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools"
 }
 ```
 Open VSCode in the NDK source directory and select the ‘Android clang’ toolchain.

@@ -37,5 +37,6 @@ Here are some ideas to get you started:
 # 2022 TODO
 - [ ] 静音检测算法：https://github.com/cpuimage/WebRTC_VAD
 - [ ] 自动增益算法：https://github.com/cpuimage/WebRTC_AGC
+- [ ] miniaudio:  https://github.com/kiah2008/miniaudio
 
 

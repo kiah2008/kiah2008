@@ -6,7 +6,7 @@ I write open source projects about audio and image algorthms in github.
 
 If you like my open source projects, and useful for you，
 
-please consider [send me a star](https://github.com/kiah2008/kiah2008).
+please consider [send me a star](https://github.com/kiah2008/kiah2008)😄.
 
 Thank you for your support!
 

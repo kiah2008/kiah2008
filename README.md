@@ -14,8 +14,7 @@ Thank you for your support!
 
 - 👨🏽‍💻 I have worked for Mediatek, Megvii, etc.
 - 🌱 I’m currently working on  
-    * Android Virtual Device  
-         - [x] Android Audio &Video
+    * Android multimedia
 - 👯 I’m looking to collaborate on audio and image algorithms
 
 ![kiah2008's github stats](https://github-readme-stats.vercel.app/api?username=kiah2008&show_icons=true&hide_border=true)

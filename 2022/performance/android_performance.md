@@ -159,5 +159,5 @@ CPU 应处于低功耗调度程序空闲循环中（可能是正在执行 ARM �
 
 
 
-# refference
+# referrence
 [Android的离奇陷阱 — 设置线程优先级导致的微信卡顿惨案](https://posts.careerengine.us/p/60d7f9a9bc83141c093e4dfd?from=mostSharedPostSidePanel)

@@ -156,3 +156,8 @@ CPU 应处于低功耗调度程序空闲循环中（可能是正在执行 ARM �
 
 对于 cpu.active 值，您可以测量系统未处于挂起模式且不执行任务时的功率。
 一个 CPU（通常是主 CPU）应运行任务，而所有其他 CPU 都应处于空闲状态。
+
+
+
+# refference
+[Android的离奇陷阱 — 设置线程优先级导致的微信卡顿惨案](https://posts.careerengine.us/p/60d7f9a9bc83141c093e4dfd?from=mostSharedPostSidePanel)

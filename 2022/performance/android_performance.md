@@ -31,9 +31,78 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
       return exclusiveCores;
   }
 ```
+## 设置cpu 亲密性
+```c
+void setThreadAffinity() {
 
+  pid_t current_thread_id = gettid();
+  cpu_set_t cpu_set;
+  CPU_ZERO(&cpu_set);
 
+  // If the callback cpu ids aren't specified then bind to the current cpu
+  if (callback_cpu_ids_.empty()) {
+    int current_cpu_id = sched_getcpu();
+    LOGV("Current CPU ID is %d", current_cpu_id);
+    CPU_SET(current_cpu_id, &cpu_set);
+  } else {
 
+    for (size_t i = 0; i < callback_cpu_ids_.size(); i++) {
+      int cpu_id = callback_cpu_ids_.at(i);
+      LOGV("CPU ID %d added to cores set", cpu_id);
+      CPU_SET(cpu_id, &cpu_set);
+    }
+  }
+
+  int result = sched_setaffinity(current_thread_id, sizeof(cpu_set_t), &cpu_set);
+  if (result == 0) {
+    LOGV("Thread affinity set");
+  } else {
+    LOGW("Error setting thread affinity. Error no: %d", result);
+  }
+
+  is_thread_affinity_set_ = true;
+}
+```
+
+## 设置线程优先级
+java
+```java
+ android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_AUDIO);
+```
+c
+```c
+#if defined(__ANDROID__)
+int androidSetThreadPriority(pid_t tid, int pri)
+{
+    int rc = 0;
+    int lasterr = 0;
+
+    if (pri >= ANDROID_PRIORITY_BACKGROUND) {
+        rc = set_sched_policy(tid, SP_BACKGROUND);
+    } else if (getpriority(PRIO_PROCESS, tid) >= ANDROID_PRIORITY_BACKGROUND) {
+        rc = set_sched_policy(tid, SP_FOREGROUND);
+    }
+
+    if (rc) {
+        lasterr = errno;
+    }
+
+    if (setpriority(PRIO_PROCESS, tid, pri) < 0) {
+        rc = INVALID_OPERATION;
+    } else {
+        errno = lasterr;
+    }
+
+    return rc;
+}
+
+int androidGetThreadPriority(pid_t tid) {
+    return getpriority(PRIO_PROCESS, tid);
+}
+
+#endif
+
+```
 # android 功耗相关
 避免android 挂起
 ```

@@ -294,7 +294,6 @@ Version: 1
         "class",
         "guard",
         "interface",
-        "enum",
         "enum"
       ],
       "default": "component"
@@ -396,7 +395,40 @@ Version: 1
 }
 ```
 
+3. 头文件报错
 
+   正确设定c_cpp_properties.json
+
+   ```
+   {
+       "env": {
+           "myCompilerPath": "C:\\Users/kiah/AppData/Local/Android/Sdk/ndk/20.1.5948944/"
+         },
+       "configurations": [
+           {
+               "name": "android-clang",
+               "includePath": [
+                   "${workspaceFolder}/**",
+                   "${env:myCompilerPath}/sysroot/usr/include",
+                   "${env:myCompilerPath}/sysroot/usr/include/aarch64-linux-android"
+               ],
+               "defines": [
+                   "_DEBUG",
+                   "UNICODE",
+                   "_UNICODE"
+               ],
+               "compilerPath": "${env:myCompilerPath}/toolchains/llvm/prebuilt/windows-x86_64/bin/clang++.exe",
+               "cStandard": "c11",
+               "cppStandard": "c++14"
+           }
+       ],
+       "version": 4
+   }
+   ```
+
+   
+
+4. 
 
 # Reference
 
@@ -416,3 +448,8 @@ Ninja's low-level approach makes it perfect for embedding into more featureful b
 ## [Cross Compiling for Android with the NDK](https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html#id22)
 
 ## [Android offical Cmake Guide](https://developer.android.com/ndk/guides/cmake#command-line)
+
+
+
+[不想用Android Studio，教你如何用vscode搭建原生app开发环境](https://www.jianshu.com/p/378930364493)
+

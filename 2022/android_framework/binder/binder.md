@@ -45,26 +45,26 @@ BpBinder(客户端)和BBinder(服务端)都是Android中Binder通信相关的代
 
 在后续的Binder源码分析过程中所涉及的源码，会有部分的精简，主要是去掉所有log输出语句，已减少代码篇幅过于长。通过前面的介绍，下面罗列一下关于Binder系列文章的提纲：
 
-- [Binder系列1—Binder Driver初探](http://gityuan.com/2015/11/01/binder-driver/)
-- [Binder系列2—Binder Driver再探](http://gityuan.com/2015/11/02/binder-driver-2/)
-- [Binder系列3—启动Service Manager](http://gityuan.com/2015/11/07/binder-start-sm/)
-- [Binder系列4—获取Service Manager](http://gityuan.com/2015/11/08/binder-get-sm/)
-- [Binder系列5—注册服务(addService)](http://gityuan.com/2015/11/14/binder-add-service/)
-- [Binder系列6—获取服务(getService)](http://gityuan.com/2015/11/15/binder-get-service/)
-- [Binder系列7—framework层分析](http://gityuan.com/2015/11/21/binder-framework/)
-- [Binder系列8—如何使用Binder](http://gityuan.com/2015/11/22/binder-use/)
-- [Binder系列9—如何使用AIDL](http://gityuan.com/2015/11/23/binder-aidl/)
-- [Binder系列10—总结](http://gityuan.com/2015/11/28/binder-summary/)
+- [Binder系列1—Binder Driver初探](binder_driver.md)
+- [Binder系列2—Binder Driver再探](binder_driver_2.md)
+- [Binder系列3—启动Service Manager](binder_sm_start_3.md)
+- [Binder系列4—获取Service Manager](get_sm_4.md)
+- [Binder系列5—注册服务(addService)](add_service_5.md)
+- [Binder系列6—获取服务(getService)](get_service_6.md)
+- [Binder系列7—framework层分析](binder_framework_7.md)
+- [Binder系列8—如何使用Binder](binder_use_8.md)
+- [Binder系列9—如何使用AIDL](binder_aidl_9.md)
+- [Binder系列10—总结](binder_summary_10.md)
 
-文章是从底层驱动往上层写的，这并不适合大家的理解，建议读者还是从上层往底层看。下面说说这个系列文章之间的彼此联系，也是对你阅读顺序的一个建议，更好的建议，大家可以上微博跟**[@Gityuan](http://weibo.com/gityuan)**，或许邮件跟我进行交流与反馈：
+文章是从底层驱动往上层写的，这并不适合大家的理解，建议读者还是从上层往底层看。下面说说这个系列文章之间的彼此联系，也是对你阅读顺序的一个建议.
 
-首先阅读[Binder系列5—注册服务(addService)](http://gityuan.com/2015/11/14/binder-add-service/)和[Binder系列6—获取服务(getService)](http://gityuan.com/2015/11/15/binder-get-service/)，这两个过程都需要于ServiceManager打交道，那么这两个过程在开始之前都需要[Binder系列4—获取Service Manager](http://gityuan.com/2015/11/08/binder-get-sm/)，既然要获取Service Manager，那么就需要先[Binder系列3—启动Service Manager](http://gityuan.com/2015/11/07/binder-start-sm/)。在看Binder服务的注册和获取这两个过程中，不断追溯下去，最终调用到底层Binder底层驱动，这时需要了解[Binder系列1—Binder Driver初探](http://gityuan.com/2015/11/01/binder-driver/)和[Binder系列2—Binder Driver再探](http://gityuan.com/2015/11/02/binder-driver-2/)。
+首先阅读[Binder系列5—注册服务(addService)](add_service_5.md)和[Binder系列6—获取服务(getService)](get_service_6.md)，这两个过程都需要于ServiceManager打交道，那么这两个过程在开始之前都需要[Binder系列4—获取Service Manager](get_sm_4.md)，既然要获取Service Manager，那么就需要先[Binder系列3—启动Service Manager](binder_sm_start_3.md)。在看Binder服务的注册和获取这两个过程中，不断追溯下去，最终调用到底层Binder底层驱动，这时需要了解[Binder系列1—Binder Driver初探](binder_driver.md)和[Binder系列2—Binder Driver再探](binder_driver_2.md)。
 
-看完Binder系列1~系列6，那么对Binder的整个流程会有一个比较清晰的认知，这还只是停留在Native层(C/C++)。接下来，可以看看上层[Binder系列7—framework层分析](http://gityuan.com/2015/11/21/binder-framework/)的Binder架构情况，Java层 Binder架构的核心逻辑都是交由Native架构来完成，更多的是对Binder的一个封装过程，只有真正理解了Native层Binder架构，才能算掌握的Binder。
+看完Binder系列1~系列6，那么对Binder的整个流程会有一个比较清晰的认知，这还只是停留在Native层(C/C++)。接下来，可以看看上层[Binder系列7—framework层分析](binder_framework_7.md)的Binder架构情况，Java层 Binder架构的核心逻辑都是交由Native架构来完成，更多的是对Binder的一个封装过程，只有真正理解了Native层Binder架构，才能算掌握的Binder。
 
-前面的这些都是讲述Binder整个流程以及原理，再接下来你可能想要自己写一套Binder的C/S架构服务。如果你是**系统工程师**可能会比较关心Native层和framework层分别该如何实现自己的自定义的Binder通信服务，见[Binder系列8—如何使用Binder](http://gityuan.com/2015/11/22/binder-use/)；如果你是**应用开发工程师**则应该更关心App是如何使用Binder的，那么可以查看文章[Binder系列9—如何使用AIDL](http://gityuan.com/2015/11/23/binder-aidl/)。
+前面的这些都是讲述Binder整个流程以及原理，再接下来你可能想要自己写一套Binder的C/S架构服务。如果你是**系统工程师**可能会比较关心Native层和framework层分别该如何实现自己的自定义的Binder通信服务，见[Binder系列8—如何使用Binder](binder_use_8.md)；如果你是**应用开发工程师**则应该更关心App是如何使用Binder的，那么可以查看文章[Binder系列9—如何使用AIDL](binder_aidl_9.md)。
 
-最后是对Binder的一个简单总结[Binder系列10—总结](http://gityuan.com/2015/11/28/binder-summary/)。
+最后是对Binder的一个简单总结[Binder系列10—总结](binder_summary_10.md)。
 
 ## 四. 源码目录
 

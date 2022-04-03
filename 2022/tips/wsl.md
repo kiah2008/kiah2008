@@ -25,3 +25,9 @@ wsl --shutdown
 ## VS Code on WSL
 https://docs.microsoft.com/zh-cn/windows/wsl/tutorials/wsl-vscode
 ![image](https://user-images.githubusercontent.com/4476837/161429115-259c23ed-b59f-42fd-8b32-314dd8044551.png)
+
+
+## GNU compiler tools and the GDB debugger
+```
+sudo apt-get install build-essential gdb
+```

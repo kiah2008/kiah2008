@@ -1,4 +1,4 @@
-we will show you how to install and use **SSHFS** client on any Linux distribution to mount remote Linux filesystem or directory on a local Linux machine.
+introduce how to install and use **SSHFS** client on any Linux distribution to mount remote Linux filesystem or directory on a local Linux machine.
 
 #### Step 1: Install SSHFS Client in Linux Systems
 
@@ -30,12 +30,13 @@ The following command will mount remote directory called `/home/tecmint` under `
 $ sudo sshfs -o allow_other tecmint@x.x.x.x:/home/tecmint/ /mnt/tecmint     [On Debian/Ubuntu based systems]
 ```
 
-If your Linux server is configured with SSH key based authorization, then you will need to specify the path to your public keys as shown in the following command.
+If your **Linux server is configured with SSH key based authorization**, then you will need to specify the path to your public keys as shown in the following command.
 
 ```
 # sshfs -o IdentityFile=~/.ssh/id_rsa tecmint@x.x.x.x:/home/tecmint/ /mnt/tecmint
 $ sudo sshfs -o allow_other,IdentityFile=~/.ssh/id_rsa tecmint@x.x.x.x:/home/tecmint/ /mnt/tecmint     [On Debian/Ubuntu based systems]
 ```
+ps. it's **id_rsa,**, and not id_rsa.pub
 
 #### Step 4: Verifying Remote Filesystem is Mounted
 

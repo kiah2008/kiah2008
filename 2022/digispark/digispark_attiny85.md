@@ -100,6 +100,16 @@
 
 http://digistump.com/wiki/digispark
 
+First, in Arduino IDE, add link below to "Board Manager URL" in Preferences:
+
+http://digistump.com/package_digistump_index.json
+
+Second, download and install ATtiny85 module driver by Digistump:
+
+https://github.com/digistump/DigistumpArduino/releases
+
+
+
 
 
 ![1651322931423](digispark_attiny85.assets/1651322931423.png)
@@ -417,9 +427,99 @@ void loop()
 }
 ```
 
+
+
+## OLED Display
+
+ ![img](digispark_attiny85.assets/ATtiny85%20I2C%20OLED%20Interface.jpg) 
+
+```c
+//----------------------------------------
+//ATtiny85 Module Interfaced with I2C OLED
+//----------------------------------------
+#include <DigisparkOLED.h>
+#include <Wire.h>
+//---------------------------------------------------
+#define SW  1
+#define LED 4
+unsigned int i = 0;
+//===================================================
+void setup()
+{
+  pinMode(SW,INPUT);
+  pinMode(LED,OUTPUT);
+  oled.begin();
+  oled.clear();
+  oled.setFont(FONT8X16);
+  oled.setCursor(30, 0);
+  oled.print("ATtiny85");
+}
+//===================================================
+void loop()
+{   
+  if(digitalRead(SW) == HIGH) {
+      delay(100);
+      i++;
+  }
+  if(i%2 == 0) digitalWrite(LED, !digitalRead(LED));
+  if(i%2 == 1) digitalWrite(LED, LOW);
+  //-------------------------------------------------
+  oled.setFont(FONT8X16);
+  oled.setCursor(0, 3);
+  oled.print("Counter: ");
+  oled.setCursor(70, 3);
+  oled.println(i);
+  delay(200);
+}
+```
+
+> https://akuzechie.blogspot.com/
+
+> http://gammon.com.au/i2c
+
 # SPI
 
 http://www.gammon.com.au/spi
+
+
+
+## SPI-based 0.96″ OLED display
+
+
+
+ ![spi_096_oled_disp](digispark_attiny85.assets/ard_spi_096_oled_disp.png) 
+
+Using Adafruit’s SSD1306 128×64 SPI sample sketch as an example, we would connect the display with the Arduino accordingly:
+
+| Arduino Pins | OLED Display Pins |
+| :----------- | :---------------- |
+| Vcc          | Vcc               |
+| GND          | GND               |
+| D10          | SCL               |
+| D9           | SDA               |
+| D13          | RST               |
+| D11          | D/C               |
+
+Download the following libraries & place it in your Arduino Librariy directory:
+
+Adafruit’s GFX library: https://github.com/adafruit/Adafruit-GFX-Library
+
+Adafruit’s SSD1306 library: https://github.com/adafruit/Adafruit_SSD1306
+
+After that, upload the Adafruit’s SSD1306 128×64 SPI sample sketch into your Arduino board & the display should be running!
+
+
+
+# Arduino Guide
+
+ 
+
+Arduino教程——使用和编写类库  http://www.arduino.cn/thread-22293-1-1.html
+Arduino教程——通过 库管理器 添加库 http://www.arduino.cn/thread-31719-1-1.html
+Arduino教程——手动添加库并使用 http://www.arduino.cn/thread-31720-1-1.html
+Arduino教程——编写Arduino类库(1) http://www.arduino.cn/thread-31721-1-1.html
+Arduino教程——编写Arduino类库(2) http://www.arduino.cn/thread-31722-1-1.html
+Arduino教程——编写Arduino类库(3) http://www.arduino.cn/thread-31723-1-1.html 
 
 
 

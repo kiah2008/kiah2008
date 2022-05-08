@@ -104,15 +104,34 @@ First, in Arduino IDE, add link below to "Board Manager URL" in Preferences:
 
 http://digistump.com/package_digistump_index.json
 
+![1651989510935](digispark_attiny85.assets/1651989510935.png)
+
 Second, download and install ATtiny85 module driver by Digistump:
 
 https://github.com/digistump/DigistumpArduino/releases
 
 
 
+## Pin Layout
+
+
+
 
 
 ![1651322931423](digispark_attiny85.assets/1651322931423.png)
+
+```
+// ATMEL ATTINY85 / ARDUINO
+//
+//                           +-\/-+
+//  Ain0       (D  5)  PB5  1|    |8   VCC
+//  Ain3       (D  3)  PB3  2|    |7   PB2  (D  2)  INT0  Ain1
+//  Ain2       (D  4)  PB4  3|    |6   PB1  (D  1)        pwm1
+//                     GND  4|    |5   PB0  (D  0)        pwm0
+//                           +----+
+```
+
+
 
 
 
@@ -148,6 +167,38 @@ void loop() {
 ```
 
 using PUTTY to connect com port and set bit
+
+## SoftSerial
+
+[SendOnlySoftwareSerial](SendOnlySoftwareSerial.zip)
+
+```c
+#include <SendOnlySoftwareSerial.h>
+
+#define SOFTSERIAL_TX 4
+#define BUILT_IN_LED 1
+SendOnlySoftwareSerial mySerial(SOFTSERIAL_TX);//设置tx pin
+
+void setup() {
+  mySerial.begin(9600); 
+  pinMode(BUILT_IN_LED, OUTPUT);
+  digitalWrite(BUILT_IN_LED, LOW);
+  Serial.println(F("setup complete"));
+}
+
+// the loop routine runs over and over again forever:
+void loop() {
+  static unsigned long counter = 0;
+  mySerial.print(F("this is iteration:"));
+  mySerial.println(++counter);
+  if(counter%2==0) {
+      digitalWrite(BUILT_IN_LED, HIGH);
+  } else {
+      digitalWrite(BUILT_IN_LED, LOW);
+  }
+  delay(500);
+}
+```
 
 
 
@@ -284,151 +335,6 @@ void loop() {
 
 ## I2C 设备扫描
 
-```c
-#include <Wire.h>
-
-
-void setup()
-{
-  Wire.begin();
-
-  Serial.begin(9600);
-  while (!Serial);             // Leonardo: wait for serial monitor
-  Serial.println("\nI2C Scanner");
-}
-
-
-void loop()
-{
-  byte error, address;
-  int nDevices;
-
-  Serial.println("Scanning...");
-
-  nDevices = 0;
-  for(address = 1; address < 127; address++ ) 
-  {
-    // The i2c_scanner uses the return value of
-    // the Write.endTransmisstion to see if
-    // a device did acknowledge to the address.
-    Wire.beginTransmission(address);
-    error = Wire.endTransmission();
-
-    if (error == 0)
-    {
-      Serial.print("I2C device found at address 0x");
-      if (address<16) 
-        Serial.print("0");
-      Serial.print(address,HEX);
-      Serial.println("  !");
-
-      nDevices++;
-    }
-    else if (error==4) 
-    {
-      Serial.print("Unknown error at address 0x");
-      if (address<16) 
-        Serial.print("0");
-      Serial.println(address,HEX);
-    }    
-  }
-  if (nDevices == 0)
-    Serial.println("No I2C devices found\n");
-  else
-    Serial.println("done\n");
-
-  delay(5000);           // wait 5 seconds for next scan
-}
-```
-
-case 2
-
-```c
-// --------------------------------------
-// i2c_scanner
-//
-// Version 1
-//    This program (or code that looks like it)
-//    can be found in many places.
-//    For example on the Arduino.cc forum.
-//    The original author is not know.
-// Version 2, Juni 2012, Using Arduino 1.0.1
-//     Adapted to be as simple as possible by Arduino.cc user Krodal
-// Version 3, Feb 26  2013
-//    V3 by louarnold
-// Version 4, March 3, 2013, Using Arduino 1.0.3
-//    by Arduino.cc user Krodal.
-//    Changes by louarnold removed.
-//    Scanning addresses changed from 0...127 to 1...119,
-//    according to the i2c scanner by Nick Gammon
-//    http://www.gammon.com.au/forum/?id=10896
-// Version 5, March 28, 2013
-//    As version 4, but address scans now to 127.
-//    A sensor seems to use address 120.
-//
-//
-// This sketch tests the standard 7-bit addresses
-// Devices with higher bit address might not be seen properly.
-//
-
-#include <Wire.h>
-#include <DigiKeyboard.h>
-
-void setup()
-{
-
-  Wire.begin();
-  DigiKeyboard.delay(3000);
-
-  DigiKeyboard.println("\nI2C Scanner");
-}
-
-
-void loop()
-{
-  byte error, address;
-  int nDevices;
-
-  DigiKeyboard.println("Scanning...");
-
-  nDevices = 0;
-  for (address = 1; address < 127; address++ )
-  {
-    // The i2c_scanner uses the return value of
-    // the Write.endTransmisstion to see if
-    // a device did acknowledge to the address.
-    Wire.beginTransmission(address);
-    error = Wire.endTransmission();
-
-    if (error == 0)
-    {
-      DigiKeyboard.print("I2C device found at address 0x");
-      if (address < 16)
-        DigiKeyboard.print("0");
-      DigiKeyboard.print(address, HEX);
-      DigiKeyboard.println("  !");
-
-      nDevices++;
-    }
-    else if (error == 4)
-    {
-      DigiKeyboard.print("Unknow error at address 0x");
-      if (address < 16)
-        DigiKeyboard.print("0");
-      DigiKeyboard.println(address, HEX);
-    }
-  }
-  if (nDevices == 0)
-    DigiKeyboard.println("No I2C devices found\n");
-  else
-    DigiKeyboard.println("done\n");
-
-  DigiKeyboard.delay(5000);           // wait 5 seconds for next scan
-}
-```
-
-
-
 ## OLED Display
 
  ![img](digispark_attiny85.assets/ATtiny85%20I2C%20OLED%20Interface.jpg) 
@@ -477,6 +383,24 @@ void loop()
 
 > http://gammon.com.au/i2c
 
+
+
+# I2C sample
+
+https://www.instructables.com/ATTiny-USI-I2C-The-detailed-in-depth-and-infor/
+
+
+
+ ![What Is I2C - 1](digispark_attiny85.assets/FV66U7IH54067FN.png)
+
+
+
+
+
+ ![What Is I2C - 2](digispark_attiny85.assets/FV1DSA5H54067F8.png)  
+
+
+
 # SPI
 
 http://www.gammon.com.au/spi
@@ -507,6 +431,78 @@ Adafruit’s GFX library: https://github.com/adafruit/Adafruit-GFX-Library
 Adafruit’s SSD1306 library: https://github.com/adafruit/Adafruit_SSD1306
 
 After that, upload the Adafruit’s SSD1306 128×64 SPI sample sketch into your Arduino board & the display should be running!
+
+# Sensors
+
+## Ultrasonic
+
+
+
+```c
+#include <SendOnlySoftwareSerial.h>
+ 
+#define TRIGGER_PIN 0 //HCR04 Trigger set to pin 0
+#define ECHO_PIN 2 	// HCR04 Echo set to Pin 2
+#define UART_PIN 3
+#define BUILT_LIGHT 1
+
+SendOnlySoftwareSerial mySerial(UART_PIN);
+
+void setup() {
+  mySerial.begin(9600); 
+  pinMode(BUILT_LIGHT, OUTPUT);
+  digitalWrite(BUILT_LIGHT, LOW);
+
+  pinMode(TRIGGER_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+
+  mySerial.println(F("setup complete"));
+}
+
+long microsecondsToCentimeters(long microseconds){
+  return microseconds / 29 / 2;
+}
+
+// the loop routine runs over and over again forever:
+void loop() {
+  static unsigned long counter = 0;
+  long duration, cm;
+
+  digitalWrite(TRIGGER_PIN, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(TRIGGER_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIGGER_PIN, LOW);
+
+  duration = pulseIn(ECHO_PIN, HIGH);
+  
+  cm = microsecondsToCentimeters(duration);
+  
+  mySerial.print(F("distance:"));
+  mySerial.println(cm);
+  if((counter++)%2 == 0) {
+      digitalWrite(BUILT_LIGHT, HIGH);
+  } else {
+      digitalWrite(BUILT_LIGHT, LOW);
+  }
+  delay(1000);
+}
+```
+
+
+
+# Low Power
+
+http://brownsofa.org/blog/2011/01/09/the-compleat-attiny13-led-flasher-part-3-low-power-mode/
+
+
+
+
+
+# AVR Libc
+
+https://www.nongnu.org/avr-libc/user-manual/pages.html
 
 
 

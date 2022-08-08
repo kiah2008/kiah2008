@@ -15,6 +15,14 @@ set_target_properties(ghcFilesystem::ghc_filesystem PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
 )
 
+add_library(glog::glog SHARED IMPORTED)
+set_target_properties(glog::glog PROPERTIES
+        IMPORTED_LOCATION_DEBUG ${_IMPORT_PREFIX}/libs/glog-0.6.0/${ANDROID_ABI}/libglog.so
+        IMPORTED_LOCATION ${_IMPORT_PREFIX}/libs/glog-0.6.0/${ANDROID_ABI}/libglog.so
+        INTERFACE_INCLUDE_DIRECTORIES ${_IMPORT_PREFIX}/libs/glog-0.6.0/
+        INTERFACE_LINK_LIBRARIES "${log-lib}"
+        )
+
 ```
 
 ## Creating a Header-Only CMake Target

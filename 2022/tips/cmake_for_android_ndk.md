@@ -1,6 +1,8 @@
 
 # CMake 技巧
 
+> https://www.bookstack.cn/read/CMake-Cookbook/content-chapter10-10.1-chinese.md
+
 ## 1. 创建只有头文件的库
 
 ```cmake

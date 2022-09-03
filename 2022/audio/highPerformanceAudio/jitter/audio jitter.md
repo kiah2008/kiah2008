@@ -1,19 +1,19 @@
 
 
-![image-20220814183248406](audio%20jitter.assets/image-20220814183248406.png)
 
-# Audio Jitter Buffer
 
-Jitter Buffer简单讲就是一个共享数据区,用来接收/存放, 并把数据均匀地发送给音频处理模块.数据包不同的到达时间被称为jitter(抖动). 它可能是由于网络拥塞，定时漂移或路由变更而产生. 在VOIP语音通话中, Jitter Buffer通常实现在语音连接的接收端, 通过目的性延迟数据包的接收,从而使得终端用户有清晰的, 较少声音失真的体验.
+# 1. Audio Jitter Buffer(音频抖动缓冲区)
+
+Jitter Buffer简单讲就是一个共享数据区,用来接收/存放, 并把数据均匀地发送给音频处理模块.数据包不同的到达时间被称为jitter(抖动). 它可能是由于网络拥塞，定时漂移或路由变更而产生. 在VOIP语音通话中, Jitter Buffer通常实现在语音连接的接收端, 通过目的性延迟数据包的接收,从而消除网络传输带来的不良影响, 使得终端用户有更好的音频体验. 
 
 ### 1.1 丢包
 
-我们虽然已经通过**冗余、NACK、FEC**等机制去抗丢包了，但是这些做法不是百分百地恢复。这里的丢包我们可以分成两部分：
+我们虽然可以通过[**冗余、NACK、FEC**](#Reference)等机制去抗丢包，但是这些做法不是百分百地恢复。这里的丢包我们可以分成两部分：
 
 - **网络丢包**：报文在网络中被丢掉，通过NACK、FEC、opus Inband FEC无法恢复。一旦出现丢包，对语音肯定存在损伤。这种丢包丢包可以通过**丢包隐藏（Packet Loss Concealment）**来减轻丢包带来的影响，但是PLC毕竟不能完全恢复语音信号，对语音损伤肯定是有的，特别是连续丢包时听感更明显。PLC原理是NetEQ信号处理的部分，等到后续部分讲解。
 - **报文迟到**：由于网络拥塞可能会导致大量报文迟到，这些报文错过了播放时间，对于音频播放来说就是“丢包”了。合理的Jitter Buffer缓冲长度能够减轻甚至避免过多PLC导致的卡顿。这种丢包可以可以归入抖动的影响中。
 
-### 2.2 抖动
+### 1.2 抖动
 
 网络中存在抖动会导致接收端收包不均匀、甚至乱序，如果按照收包顺序去播放，肯定会有时快时慢、来不及播放导致卡顿、错音等问题，在比较差的网络场景中语音基本是没法听。因此，一般语音应用都会有buffer的存在，先缓存一定量的数据保证后续均匀播放，可以牺牲一些延迟去抗抖动，抗抖动的能力取决于buffer的大小。
 
@@ -24,19 +24,13 @@ Jitter Buffer简单讲就是一个共享数据区,用来接收/存放, 并把数
 
 一般的jitter算法都是尽力去解决稳定抖动，对于突发抖动解决的并不是太好。
 
-## 2.3  抖动的计算方法
+## 1.3  抖动的计算方法
 
 
 
 ![image-20220814183936855](audio%20jitter.assets/image-20220814183936855.png)
 
 <center>抖动缓冲区工作原理示意图</center>
-
-
-
-
-
-
 
 
 
@@ -49,9 +43,42 @@ Jitter buffer自语音通话以来一直在发展，一般来说Jitter buffer主
 
 
 
-# WebRTC NetEQ jitter buffer
+# 2. WebRTC Jitter Buffer
 
-WebRTC NetEQ中也有jitter buffer，但是其设计更复杂，效果也是比普通的静态jitter buffer、动态jitter buffer更好。NetEQ中的jitter buffer和上面说的jitter buffer一样也会动态调整jitter buffer深度，但是调整更精细，还配合了加速、减速、PLC等策略：
+![image-20220903182220007](audio%20jitter.assets/image-20220903182220007.png)
+
+音频引擎主要包括:
+
+iSAC(Internet Speech Audio Codec)/iLBC(internet Low Bitrate Codec)解码器, 回声消除(Acoustic Echo Canceler-AEC)/噪声抑制(Noise Reduction-NR)以及NetEQ三大部分;
+
+![image-20220814183248406](audio%20jitter.assets/image-20220814183248406.png)
+
+
+
+
+
+## 2.1 抖动的定义
+
+![image-20220903183716396](audio%20jitter.assets/image-20220903183716396.png)
+
+## 2.2 抖动消除
+
+- 抖动缓冲区算法
+
+  - 静态抖动缓冲算法控制
+  - 动态抖动缓冲算法控制
+
+- 丢包隐藏原理
+
+  ![image-20220903191038607](audio%20jitter.assets/image-20220903191038607.png)
+
+- 
+
+  
+
+## 2.3 NetEQ
+
+WebRTC NetEQ中的jitter buffer，设计相对更复杂，效果也是比普通的静态jitter buffer、动态jitter buffer更好。NetEQ中的jitter buffer和上面说的jitter buffer一样也会动态调整jitter buffer深度，但是调整更精细，还配合了加速、减速、PLC等策略：
 
 - 和传统jitter buffer类似，可以配置jitter buffer的min buffer、max buffer、start buffer。
 - 从统计上估计当前当前网络jitter，动态调整jitter buffer的深度。
@@ -61,6 +88,29 @@ WebRTC NetEQ中也有jitter buffer，但是其设计更复杂，效果也是比�
 
 ![image-20220814182448700](audio%20jitter.assets/image-20220814182448700.png)
 
+NetEQ主要有四个部分, 
+
+- Adaptive packet buffer(自适应缓冲器)
+- Speech  decoder(语音解码器)
+- Jitter control and error concealment(抖动控制及丢包隐藏)
+- playout(播放)
+
+Jitter control and error concealment主要有三大主要操作所组成:
+
+- Expansion: 扩展操作, 即对语音时长的拉伸, 其中包括expand及preemptive_expand 两种模式. 前者为丢包隐藏操作, 其作用是等待延迟包并补偿丢包, 由于补偿丢包是实现数据从无到有, 因此使用expand, 表示语音数据的扩展; 后者以为有限扩展, 及在原有数据的基础上拉伸语音时长, 因此可以实现减速播放功能;
+- norma: 正常播放操作, 即在网络状况正常且相对无抖动的操作;
+- Accelerate: 加速操作, 即对语音信号处理以实现快速播放;
+
+## 2.4 NetEQ介绍
+
+![image-20220903191516668](audio%20jitter.assets/image-20220903191516668.png)
+
+NetEQ模块主要包含MCU和DSP量大处理单元, 音频解码器模块以及抖动缓冲区(Packet/Jitter buffer)和语音缓冲区(Speech Buffer)
+
+![image-20220903194136266](audio%20jitter.assets/image-20220903194136266.png)
+
+当语音引擎运行时, 会根据网络状况
+
 NetEQ主要有两个线程，一个线程往NetEQ中插入报文（InsertPacket），并估计当前网络jitter情况；另外一个线程10ms调度一次，解码处理得到10ms音频（GetAudio）。
 
 下面深入下这两个线程操作，逐步剖析NetEQ的jitter buffer原理。
@@ -68,10 +118,6 @@ NetEQ主要有两个线程，一个线程往NetEQ中插入报文（InsertPacket�
 ### 3.1 估计当前需要buffer的时间：target delay
 
 这个任务在InsertPacket所在线程完成，主要依靠`DelayManager`中的`直方图`和`DelayPeakDetector`估计当前的jitter，并得到一个合理地延迟时间：target delay。直方图可以估计一个稳定的值，而peak是瞬态的，所以他们分别估计的是稳定抖动和突发抖动。
-
-
-
-
 
 target delay估计入口如下，需要注意几点：
 
@@ -291,11 +337,26 @@ bool DelayPeakDetector::CheckPeakConditions() {
 >
 > 
 
+# 其它流媒体协议
+
+## xquic
+
+## rtsp
 
 
-[[白话解读 WebRTC 音频 NetEQ 及优化实践](https://segmentfault.com/a/1190000039425822)](https://segmentfault.com/a/1190000039425822)
 
-[NetEQ 算法](https://blog.csdn.net/u014338577/article/details/46010983?spm=a2c6h.12873639.0.0.5e54504c4dHXyK)
+# 低码率
+
+## Lyra
+
+
+
+# Reference
+
+## 1. [白话解读 WebRTC 音频 NetEQ 及优化实践](https://segmentfault.com/a/1190000039425822)
+
+## 2. [NetEQ 算法](https://blog.csdn.net/u014338577/article/details/46010983?spm=a2c6h.12873639.0.0.5e54504c4dHXyK)
+## 3. 
 
 
 
